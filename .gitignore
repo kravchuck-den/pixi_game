@@ -1,0 +1,12 @@
+#packages, vendors etc.
+node_modules
+
+#IDE(s)
+.idea
+
+#generated files
+client/public/js
+client/public/css
+
+#other
+package-lock.json
