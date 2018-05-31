@@ -1,26 +1,30 @@
-import * as PIXI from 'pixi.js';
 import '../styles/index.css';
 
 import Character from './Character';
 import Controls from './Controls';
+import Game from './Game';
 
-const app = new PIXI.Application(800, 600, {backgroundColor : 0xddeedd});
+
+const game = new Game(800, 600, {backgroundColor : 0xddeedd});
+window.game = game;
 const appHtmlContainer = document.getElementById('app');
-appHtmlContainer.appendChild(app.view);
+appHtmlContainer.appendChild(game.view);
 
-const player = new Character();
-player.controls = new Controls(player);
+game.onLoad(onGameLoadListener);
 
-// player.speed = 2;
-setTimeout(() => {player.speed = 10}, 1000);
+function onGameLoadListener() {
 
-player.x = app.screen.width / 2;
-player.y = app.screen.height / 2;
+  const player = new Character();
+  game.store.currentCharacter = player;
+  new Controls();
 
-app.stage.addChild(player);
+  // player.controls = new Controls(player);
 
-app.ticker.add(function(delta) {
-  // const sign = Math.random() > 0.5 ? -1 : 1;
-  // player.position.y += sign;
-  // player.position.x += delta;
-});
+  player.speed = 4;
+
+  player.x = game.screen.width / 2;
+  player.y = game.screen.height / 2;
+
+  game.stage.addChild(player);
+
+}

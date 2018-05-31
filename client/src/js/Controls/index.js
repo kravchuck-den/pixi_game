@@ -1,30 +1,45 @@
 const optimalFPS = 1000 / 60;
 console.log(optimalFPS);
 
+import {
+  KEY_MOVE_TOP,
+  KEY_MOVE_BOTTOM,
+  KEY_MOVE_LEFT,
+  KEY_MOVE_RIGHT
+} from '../constants';
+
+
 export default class Controls {
 
   constructor(character) {
     this._mappingScheme = {
-      moveTop: 87,
-      moveBottom: 83,
-      moveLeft: 65,
-      moveRight: 68,
-      jump: 32
+      [KEY_MOVE_TOP]: 87,
+      [KEY_MOVE_BOTTOM]: 83,
+      [KEY_MOVE_LEFT]: 65,
+      [KEY_MOVE_RIGHT]: 68
     };
     this._pressedKeys = [];
     this._moveInterval = null;
 
     this._character = character;
 
+    console.warn('game', game);
+
     this._setupListeners();
   }
 
-  _setupListeners() {
-    // TODO: think about code below
-    // const isAlreadyPressed = (keyCode) => {
-    //   return (this._pressedKeys.indexOf(keyCode) !== -1);
-    // };
+  get mappingScheme() {
+    return this._mappingScheme;
+  }
 
+  set mappingScheme(scheme) {
+    this._mappingScheme = {
+      ...this._mappingScheme,
+      ...scheme
+    }
+  }
+
+  _setupListeners() {
     window.addEventListener('keydown', (e) => {
       const codeIndex = this._pressedKeys.indexOf(e.keyCode);
       if (codeIndex !== -1) {
@@ -51,16 +66,16 @@ export default class Controls {
     
     this._pressedKeys.forEach(key => {
       switch (key) {
-        case this._mappingScheme.moveTop:
+        case this._mappingScheme[KEY_MOVE_TOP]:
           resultDirection.y += -1;
           break;
-        case this._mappingScheme.moveBottom:
+        case this._mappingScheme[KEY_MOVE_BOTTOM]:
           resultDirection.y += 1;
           break;
-        case this._mappingScheme.moveLeft:
+        case this._mappingScheme[KEY_MOVE_LEFT]:
           resultDirection.x += -1;
           break;
-        case this._mappingScheme.moveRight:
+        case this._mappingScheme[KEY_MOVE_RIGHT]:
           resultDirection.x += 1;
           break;
       }
