@@ -11,14 +11,32 @@ import global       from 'Global';
 
 
 createGame();
-createDefaultPlayer();
 setupControls();
+
+createDefaultPlayer();
 loadMenuLevel();
+
+let fps = 0;
+let date = Date.now();
+global.game.ticker.add(delta => {
+  const optimalMs = 1000 / 60;
+  const deltaTime = delta * optimalMs;
+  // let newDate = Date.now();
+  // console.log(newDate - date);
+  // date = newDate;
+  const newFps = 1000 / deltaTime;
+  fps = (fps + newFps) / 2;
+});
+
+setInterval(() => {
+  console.clear();
+  console.log(fps);
+}, 300);
 
 
 global.currentLevel.addActor(global.player);
-global.player.x = 0;
-global.player.y = 0;
+global.player.x = global.game.screen.width / 2;
+global.player.y = global.game.screen.height;
 global.controls.init();
 
 // console.log(global.game);
@@ -40,7 +58,7 @@ function createGame() {
 
 function createDefaultPlayer() {
   const playerConfig = {
-    speed: 4,
+    speed: 7,
   };
   const player = new Character(playerConfig);
   global.add('player', player);

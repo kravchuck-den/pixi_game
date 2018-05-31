@@ -1,6 +1,4 @@
 import global from 'Global';
-
-
 import {
   KEY_MOVE_TOP,
   KEY_MOVE_BOTTOM,
@@ -90,7 +88,7 @@ export default class Controls {
       }
     });
 
-    clearInterval(this._moveInterval);
+    global.game.ticker.remove(this._onTickHandler);
 
     if (!global.player) {
       return;
@@ -102,6 +100,12 @@ export default class Controls {
       return;
     }
 
-    this._moveInterval = setInterval(() => global.player.move(), 16);
+
+    // this._moveInterval = setInterval(() => global.player.move(), 16);
+    global.game.ticker.add(this._onTickHandler);
+  }
+
+  _onTickHandler(delta) {
+    global.player.move(delta)
   }
 }

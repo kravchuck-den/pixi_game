@@ -1,5 +1,5 @@
 const DEFAULT_CONFIG = {
-  texture: PIXI.Texture.fromImage('img/default_character.png'),
+  texture: PIXI.Texture.fromImage('img/characters/default.png'),
   speed: 100,
   direction: new PIXI.Point(0, 0)
 };
@@ -33,9 +33,9 @@ export default class Character extends PIXI.Sprite {
     this._direction = point;
   }
 
-  move() {
-    this.position.x += this._direction.x * this.speed;
-    this.position.y += this._direction.y * this.speed;
+  move(delta = 1) {
+    this.position.x += this._direction.x * this.speed * delta;
+    this.position.y += this._direction.y * this.speed * delta;
   }
 
   _updateWithConfig(config = {}) {
