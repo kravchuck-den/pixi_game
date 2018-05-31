@@ -1,5 +1,5 @@
-const optimalFPS = 1000 / 60;
-console.log(optimalFPS);
+import global from 'Global';
+
 
 import {
   KEY_MOVE_TOP,
@@ -11,21 +11,20 @@ import {
 
 export default class Controls {
 
-  constructor(character) {
+  constructor() {
+
     this._mappingScheme = {
       [KEY_MOVE_TOP]: 87,
       [KEY_MOVE_BOTTOM]: 83,
       [KEY_MOVE_LEFT]: 65,
       [KEY_MOVE_RIGHT]: 68
     };
+
     this._pressedKeys = [];
     this._moveInterval = null;
 
-    this._character = character;
-
-    console.warn('game', game);
-
-    this._setupListeners();
+    this._keydownListener = this._keydownListener.bind(this);
+    this._keyupListener = this._keyupListener.bind(this);
   }
 
   get mappingScheme() {
@@ -39,26 +38,36 @@ export default class Controls {
     }
   }
 
-  _setupListeners() {
-    window.addEventListener('keydown', (e) => {
-      const codeIndex = this._pressedKeys.indexOf(e.keyCode);
-      if (codeIndex !== -1) {
-        return;
-      }
+  init() {
+    window.addEventListener('keydown', this._keydownListener);
+    window.addEventListener('keyup', this._keyupListener);
+  }
 
-      this._pressedKeys.push(e.keyCode);
-      this._updateMove();
-    });
+  destroy() {
+    window.removeEventListener('keydown', this._keydownListener);
+    window.removeEventListener('keyup', this._keyupListener);
+    this._pressedKeys = [];
+    this._updateMove();
+  }
 
-    window.addEventListener('keyup', (e) => {
-      const codeIndex = this._pressedKeys.indexOf(e.keyCode);
-      if (codeIndex === -1) {
-        return;
-      }
+  _keydownListener(e) {
+    const codeIndex = this._pressedKeys.indexOf(e.keyCode);
+    if (codeIndex !== -1) {
+      return;
+    }
 
-      this._pressedKeys.splice(codeIndex, 1);
-      this._updateMove();
-    });
+    this._pressedKeys.push(e.keyCode);
+    this._updateMove();
+  }
+
+  _keyupListener(e) {
+    const codeIndex = this._pressedKeys.indexOf(e.keyCode);
+    if (codeIndex === -1) {
+      return;
+    }
+
+    this._pressedKeys.splice(codeIndex, 1);
+    this._updateMove();
   }
 
   _updateMove() {
@@ -81,9 +90,18 @@ export default class Controls {
       }
     });
 
-    this._character.direction = resultDirection;
-
     clearInterval(this._moveInterval);
-    this._moveInterval = setInterval(() => this._character.move(), optimalFPS);
+
+    if (!global.player) {
+      return;
+    }
+
+    global.player.direction = resultDirection;
+
+    if (resultDirection.x === 0 && resultDirection.y === 0) {
+      return;
+    }
+
+    this._moveInterval = setInterval(() => global.player.move(), 16);
   }
 }

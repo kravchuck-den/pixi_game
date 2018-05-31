@@ -1,17 +1,7 @@
-import Store from '../Store';
-
 export default class Game extends PIXI.Application{
 
   constructor(...args) {
     super(...args);
-
-    this.characters = [];
-    this.currentCharacter = null;
-    this.constants = {};
-
-
-    this.store = new Store();
-    this._onLoadListener = null;
 
     this.loadResources();
   }
@@ -27,5 +17,4 @@ export default class Game extends PIXI.Application{
   onLoad(listener) {
     this._onLoadListener = listener;
   }
-
 }

@@ -1,30 +1,61 @@
+const GAME_HTML_CONTAINER_ID = 'app';
+
 import '../styles/index.css';
 
-import Character from './Character';
-import Controls from './Controls';
-import Game from './Game';
+import Game         from 'Game';
+import Character    from 'components/Character';
+import Level        from 'components/Level';
+import LevelManager from 'LevelManager';
+import Controls     from 'Controls';
+import global       from 'Global';
 
 
-const game = new Game(800, 600, {backgroundColor : 0xddeedd});
-window.game = game;
-const appHtmlContainer = document.getElementById('app');
-appHtmlContainer.appendChild(game.view);
+createGame();
+createDefaultPlayer();
+setupControls();
+loadMenuLevel();
 
-game.onLoad(onGameLoadListener);
 
-function onGameLoadListener() {
+global.currentLevel.addActor(global.player);
+global.player.x = 0;
+global.player.y = 0;
+global.controls.init();
 
-  const player = new Character();
-  game.store.currentCharacter = player;
-  new Controls();
+// console.log(global.game);
+// console.log(global.game.scene);
+// global.game.stage.addChild(global.player);
 
-  // player.controls = new Controls(player);
 
-  player.speed = 4;
 
-  player.x = game.screen.width / 2;
-  player.y = game.screen.height / 2;
 
-  game.stage.addChild(player);
 
+function createGame() {
+  const game = new Game(800, 600, {backgroundColor : 0xddeedd});
+
+  const appHtmlContainer = document.getElementById(GAME_HTML_CONTAINER_ID);
+  appHtmlContainer.appendChild(game.view);
+
+  global.add('game', game);
+}
+
+function createDefaultPlayer() {
+  const playerConfig = {
+    speed: 4,
+  };
+  const player = new Character(playerConfig);
+  global.add('player', player);
+}
+
+function setupControls() {
+  const controls = new Controls();
+
+  global.add('controls', controls);
+}
+
+function loadMenuLevel() {
+  const level = new Level({background: '0x33ffdd'});
+  LevelManager.add('menu', level);
+  LevelManager.load('menu');
+
+  global.add('currentLevel', LevelManager.getCurrentLevel());
 }

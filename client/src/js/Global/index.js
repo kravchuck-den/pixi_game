@@ -1,10 +1,13 @@
-export default class Global {
-  constructor() {
-
+class Globals {
+  add(name, prop) {
+    this[name] = prop;
   }
 
-  add() {
-
+  remove(name) {
+    if (name in this) {
+      delete this[name];
+    }
   }
-
 }
+
+export default new Globals();

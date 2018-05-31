@@ -9,6 +9,12 @@ module.exports = {
     filename: 'bundle.js'
   },
   mode: 'development',
+  resolve: {
+    modules : [
+      path.join(srcFolder, 'js/'),
+      'node_modules'
+    ],
+  },
   module: {
     rules: [
       {
